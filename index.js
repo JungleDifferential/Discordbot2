@@ -1,7 +1,7 @@
 const fs = require("fs");
-const { Client, Collection, Intents } = require("discord.js");
+const { Client, Collection, Intents, MessageSelectMenu } = require("discord.js");
 const { token } = require("./config.json");
-const { generateDependencyReport } = require("@discordjs/voice");
+const { generateDependencyReport, joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
 
 // setup the client and the external (idk if thats the right word) commands
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
@@ -66,8 +66,30 @@ client.on("messageCreate", async message => {
 		if (args[0] == "disable" || args[0] == "mute" || args[0] == "deafen") {
 			crime = args[0];
 			await message.reply(`mode is now: ${crime}`);
+			return;
 		}
 	}
+
+	if (command == "join") {
+		joinVoiceChannel({
+			channelId: message.member.voice.channel.id,
+			guildId: message.guild.id,
+			adapterCreator: message.guild.voiceAdapterCreator
+		})
+		return;
+	}
+
+	if (command == "leave") {
+		const connection = getVoiceConnection(message.guild.id);
+
+		if (!connection) {
+			await message.reply("Dawg I'm not in a voice channel🤓")
+			return;
+		}
+		connection.destroy();
+		return;
+	}
+
 });
 
 // when someone updates a their voicestate (join/leave chnl, mute/unmute/deafen/undeafen)
