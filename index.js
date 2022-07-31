@@ -58,21 +58,14 @@ client.on("messageCreate", async message => {
 	const args = message.content.slice(1).split(/ +/);
 	const command = args.shift().toLowerCase();
 
-	if (command == "disable") {
-		crime = "disabled";
-		return;
-	}
-	if (command == "mute") {
-		crime = "mute";
-		return;
-	}
-	if (command == "deafen") {
-		crime = "deafen";
-		return;
-	}
 	if (command == "mode") {
-		await message.reply(crime);
-		return;
+		if (!args[0]) {
+			await message.reply(crime);
+			return;
+		}
+		if (args[0] == "disable" || args[0] == "mute" || args[0] == "deafen") {
+			crime = args[0];
+		}
 	}
 });
 
