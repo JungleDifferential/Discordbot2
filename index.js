@@ -65,6 +65,7 @@ client.on("messageCreate", async message => {
 		}
 		if (args[0] == "disable" || args[0] == "mute" || args[0] == "deafen") {
 			crime = args[0];
+			await message.reply(`mode is now: ${crime}`);
 		}
 	}
 });
