@@ -115,7 +115,7 @@ client.on("messageCreate", async message => {
 		}
 		player.play(createAudioResource(`audio/Whats_up_Big_C.wav`));
 		connection.subscribe(player);
-		return
+		return;
 	}
 
 });
@@ -151,12 +151,15 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
 			case bigB:
 				player.play(createAudioResource(`audio/whats up big b.wav`));
 				connection.subscribe(player);
+				return;
 			case bigC:
 				player.play(createAudioResource(`audio/whats up big c.wav`));
 				connection.subscribe(player);
+				return;
 			case bigN:
 				player.play(createAudioResource(`audio/sup sup big n.wav`));
 				connection.subscribe(player);
+				return;
 		}
 		
 	}
