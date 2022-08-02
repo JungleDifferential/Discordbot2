@@ -113,7 +113,7 @@ client.on("messageCreate", async message => {
 			await message.reply("Dawg I'm not in a voice channel🤓")
 			return;
 		}
-		player.play(createAudioResource(`audio/Whats_up_Big_C.wav`));
+		player.play(createAudioResource(`audio/whats up big c.wav`));
 		connection.subscribe(player);
 		return;
 	}
