@@ -22,6 +22,7 @@ const bigB = "392518224589225985";
 const bigC = "364090299519336448";
 const bigN = "317117364623900673";
 const dictatorN = "237267637212676096";
+const kai = "236236380982870017";
 
 // The Ids of the "default" and mute/deafen channels
 const stdChnl = "692568922360119326";
@@ -163,6 +164,10 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
 				return;
 			case dictatorN:
 				player.play(createAudioResource(`audio/whats poppin dictator n.wav`));
+				connection.subscribe(player);
+				return;
+			case kai:
+				player.play(createAudioResource(`audio/what up the big kairoqo.wav`));
 				connection.subscribe(player);
 				return;
 		}
