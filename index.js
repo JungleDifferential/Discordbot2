@@ -25,7 +25,7 @@ const dictatorN = "237267637212676096";
 const kai = "236236380982870017";
 
 // The Ids of the "default" and mute/deafen channels
-const stdChnl = "692568922360119326";
+const stdChnl = "692194432887422978";
 const muteChnl = "692196640349487175";
 
 // the state of the bot; disabled, mute, or deafen
@@ -85,6 +85,10 @@ client.on("messageCreate", async message => {
 	}
 
 	if (command == "join") {
+		if (message.member.voice.channel.id == null) {
+			await message.reply("I can't join a voice channel if youre not in one");
+			return;
+		}
 		joinVoiceChannel({
 			channelId: message.member.voice.channel.id,
 			guildId: message.guild.id,
@@ -100,7 +104,7 @@ client.on("messageCreate", async message => {
 		const connection = getVoiceConnection(message.guild.id);
 
 		if (!connection) {
-			await message.reply("Dawg I'm not in a voice channel🤓")
+			await message.reply("Dawg I'm not in a voice channel🤓");
 			return;
 		}
 		connection.destroy();
@@ -125,6 +129,7 @@ client.on("messageCreate", async message => {
 // when someone updates a their voicestate (join/leave chnl, mute/unmute/deafen/undeafen)
 // it will move them to mute/deffeners if they violated the "crime"
 client.on("voiceStateUpdate", async (oldState, newState) => {
+	console.log("voice status update");
 	let channelId = newState.channelId;
 	if (channelId == null) {
 		return;
@@ -140,6 +145,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
 		newState.setChannel(client.channels.cache.get(stdChnl), "non deffeners dont belong there");
 		return;
 	}
+
 	if ((crime == "mute" && newState.selfMute) || (crime == "deafen" && newState.selfDeaf)) {
 		memberChnls.set(newState.member.id, channelId);
 		newState.setChannel(client.channels.cache.get(muteChnl), "if you are muted/deafened, you belong in Mute/Deffeners!! OwO");
@@ -171,7 +177,6 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
 				connection.subscribe(player);
 				return;
 		}
-		
 	}
 });
 
