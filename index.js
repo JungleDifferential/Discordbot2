@@ -31,6 +31,10 @@ const muteChnl = "692196640349487175";
 // the state of the bot; disabled, mute, or deafen
 let crime = "disabled";
 
+// how many voice status updates there have been
+let voiceStatusUpdateNum = 0
+let voiceStatusUpdateBool = false
+
 // maps user Ids to the channel Id that they were in before they were moved to the mute/deffen channel.
 // used for moving them back to where they were
 let memberChnls = new Map();
@@ -129,7 +133,12 @@ client.on("messageCreate", async message => {
 // when someone updates a their voicestate (join/leave chnl, mute/unmute/deafen/undeafen)
 // it will move them to mute/deffeners if they violated the "crime"
 client.on("voiceStateUpdate", async (oldState, newState) => {
-	console.log("voice status update");
+	console.log(`voice status update ${voiceStatusUpdateNum}`);
+	voiceStatusUpdateNum++;
+	if (voiceStatusUpdateBool) {
+		voiceStatusUpdateBool = false;
+		return;
+	}
 	let channelId = newState.channelId;
 	if (channelId == null) {
 		return;
@@ -137,6 +146,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
 
 	// dealing with moving people who are/arent muted/deafened
 	if (channelId == muteChnl && ((crime == "mute" && !newState.selfMute) || (crime == "deafen" && !newState.selfDeaf))) {
+		voiceStatusUpdateBool = true;
 		if (memberChnls.has(newState.member.id)) {
 			newState.setChannel(client.channels.cache.get(memberChnls.get(newState.member.id)));
 			memberChnls.delete(newState.member.id);
@@ -147,6 +157,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
 	}
 
 	if ((crime == "mute" && newState.selfMute) || (crime == "deafen" && newState.selfDeaf)) {
+		voiceStatusUpdateBool = true;
 		memberChnls.set(newState.member.id, channelId);
 		newState.setChannel(client.channels.cache.get(muteChnl), "if you are muted/deafened, you belong in Mute/Deffeners!! OwO");
 		return;
