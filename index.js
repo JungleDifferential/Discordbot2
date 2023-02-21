@@ -1,7 +1,11 @@
 const fs = require("fs");
 const { Client, Collection, Intents } = require("discord.js");
 const { token } = require("./config.json");
-const { generateDependencyReport, joinVoiceChannel, getVoiceConnection, createAudioPlayer, createAudioResource } = require("@discordjs/voice");
+const { generateDependencyReport, 
+		joinVoiceChannel, 
+		getVoiceConnection, 
+		createAudioPlayer, 
+		createAudioResource } = require("@discordjs/voice");
 
 // setup the client and the external (idk if thats the right word) commands
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
@@ -29,7 +33,17 @@ const stdChnl = "692194432887422978";
 const muteChnl = "692196640349487175";
 
 // the state of the bot; disabled, mute, or deafen
-let crime = "disabled";
+let crime;
+
+if (process.argv.length == 1) {
+	crime = "disabled";
+}
+const arg = process.argv.slice(2);
+if (arg == "deafen" || arg == "mute") {
+	crime = arg;
+}
+
+console.log(`crime = ${crime}`);
 
 // how many voice status updates there have been
 let voiceStatusUpdateNum = 0
